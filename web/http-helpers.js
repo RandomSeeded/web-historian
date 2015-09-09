@@ -14,12 +14,40 @@ exports.headers = headers = {
 };
 
 exports.serveAssets = function(res, asset, callback) {
-  // we definitely need to create our index.html here (probably need to also use a template to create our newly archived pages here?)
-  // we also need to create loading.html somewhere for basic spec #2
-
   // Write some code here that helps serve up your static files!
   // (Static files are things like html (yours or archived from others...),
   // css, or anything that doesn't change often.)
+
+  // asset would be the html / whatever file
+  // res.end probably goes here
+  var serve = function(fileExists) {
+    console.log('serving');
+    if (fileExists) {
+      fs.readFile(asset, function(err, data) {
+        if (err) {
+          console.log(err);
+        } else {
+          res.writeHead(200, headers);
+          res.end(data);
+          callback();
+        }
+      });
+    }
+    else {
+      res.writeHead(404, headers);
+      res.end("File not found");
+    }
+  };
+
+  // ========= LOGIC for checking how to serve files =======
+  if (asset === __dirname+'/public/index.html') {
+    serve(true);
+  } // somewhere in here we need to do else ifs for css/other files
+  else {
+    var urlExists = archive.isUrlInList( asset, serve );
+  }
+
+  // console.log('urlexists: '+urlExists);
 };
 
   // Write some code here that helps serve up your static files!
