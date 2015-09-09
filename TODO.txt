@@ -1,0 +1,14 @@
+server basics
+
+1. a get request to ('/') should return index.html
+2. a get request to ('/somewebsitenamethathasbeenarchived') should return the archived page
+3. a get request to ('/somerandomtextthatisntaserver') should return a 404 error
+4. a post request to ('/') should add the url to sites.txt for later archiving
+
+archive helpers
+
+5. readListOfUrls should read sites.txt and return an array of sites to archive
+6. isUrlInList should run its callback with the appropriate string as the param or undefined if it doesn't exist
+7. addUrlToList should add the specified url to sites.txt and takes a callback (run with no params?)
+8. isUrlArchived should run its callback with the specified url if has already been archived or undefined
+9. downloadUrls should save the websites in the current list and add the urls to archive.paths.archivedSites which should be an array.
