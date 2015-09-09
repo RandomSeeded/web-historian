@@ -1,3 +1,6 @@
+//this file should be linked to either basic-server.js or request-handler.js (probably the latter)
+
+
 var path = require('path');
 var fs = require('fs');
 var archive = require('../helpers/archive-helpers');
@@ -11,6 +14,9 @@ exports.headers = headers = {
 };
 
 exports.serveAssets = function(res, asset, callback) {
+  // we definitely need to create our index.html here (probably need to also use a template to create our newly archived pages here?)
+  // we also need to create loading.html somewhere for basic spec #2
+
   // Write some code here that helps serve up your static files!
   // (Static files are things like html (yours or archived from others...),
   // css, or anything that doesn't change often.)

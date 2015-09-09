@@ -26,16 +26,21 @@ exports.initialize = function(pathsObj) {
 // modularize your code. Keep it clean!
 
 exports.readListOfUrls = function() {
+  //should read sites.txt and return an array of sites to archive
 };
 
 exports.isUrlInList = function() {
+  //should run its callback with the appropriate string as the param or undefined if it doesn't exist
 };
 
 exports.addUrlToList = function() {
+  //should add the specified url to sites.txt and takes a callback (run with no params?)
 };
 
 exports.isUrlArchived = function() {
+  //should run its callback with the specified url if has already been archived or undefined
 };
 
 exports.downloadUrls = function() {
+  //should save the websites in the current list and add the urls to archive.paths.archivedSites which should be an array
 };
