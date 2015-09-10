@@ -41,6 +41,10 @@ exports.readListOfUrls = function(cb) {
 
 exports.isUrlInList = function(url, cb) {
   //should run its callback with the appropriate string as the param or undefined if it doesn't exist
+
+  //remove preceding "/"
+  if (url.charAt(0) === "/") { url = url.substr(1); }
+  
   exports.readListOfUrls(function(array){
     var exists = array.reduce(function(memo, element){
       return memo || (element === url);
@@ -90,7 +94,7 @@ exports.downloadUrls = function(array) {
     response.on('end', function(err) {
       if (err) { console.log(err); }
       else {
-        fs.writeFile(exports.paths.archivedSites + '/' + hostName, function(err){
+        fs.writeFile(exports.paths.archivedSites + '/' + hostName, data, function(err){
           if(err){
             console.log('failing bodaciously');
           }

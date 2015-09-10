@@ -16,14 +16,16 @@ exports.handleRequest = function (req, res) {
   //var localPath = __dirname
   //Check if local file if so serve,
   if(req.method === 'GET' && req.url === '/'){
-    var filename = __dirname+'/public/index.html';
-    helpers.serveAssets(res, filename, 200, function(){
+    // var filename = __dirname+'/public/index.html';
+    var filename = archive.paths.siteAssets+'/index.html';
+    helpers.serveAssets(res, filename, 200, undefined, function(){
      // console.log('index served');
     });  
   }
   else if(req.method === 'GET' && localObjs[req.url]){
-    var filename = __dirname+'/public'+req.url;
-    helpers.serveAssets(res, filename, 200, function(){
+    var filename = archive.paths.siteAssets+req.url;
+    var extendHeaders = req.url === '/styles.css' ? {'Content-Type': "text/css"} : undefined;
+    helpers.serveAssets(res, filename, 200, extendHeaders, function(){
      // console.log('local served');
     });  
   }
@@ -31,21 +33,21 @@ exports.handleRequest = function (req, res) {
   else if (req.method === 'GET') {
     archive.isUrlArchived(req.url, function(exists) {
       if (exists) { 
-        helpers.serveAssets(res, archive.paths.archivedSites+"/"+req.url, 200, function() { 
-          // console.log('archived served');
+        helpers.serveAssets(res, archive.paths.archivedSites+"/"+req.url, 200, undefined, function() { 
+          console.log('archived served');
         });
       }
       else {
         // if URL is in list but not archived > serve loading
         archive.isUrlInList(req.url, function(exists) {
           if (exists) {
-            helpers.serveAssets(res, __dirname+"/public/loading.html", 200, function() {
+            helpers.serveAssets(res, archive.paths.siteAssets+"/loading.html", 200, undefined, function() {
               // console.log('loading served');
             });
           }
           else {
             // if Url isn'tARchived throw 404 and run the code to add it (could check for validity of server)
-            helpers.serveAssets(res, undefined, 404, function() {
+            helpers.serveAssets(res, undefined, 404, undefined, function() {
               // console.log('throwing 404');
               return 'File does not exists';
             })
@@ -69,7 +71,8 @@ exports.handleRequest = function (req, res) {
       archive.addUrlToList(suffix, function(){
         // console.log('writing '+suffix+' to sites.txt');
       });
-      helpers.serveAssets(res, undefined, 302, function() {
+      // res.writeHead(302, _.extend({Location: '/'+suffix}, helpers.headers));
+      helpers.serveAssets(res, undefined, 302, {Location: '/'+suffix}, function() {
         // console.log('redirecting to loading page');
         return 'redirecting';
       });

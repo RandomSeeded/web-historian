@@ -4,6 +4,8 @@
 var path = require('path');
 var fs = require('fs');
 var archive = require('../helpers/archive-helpers');
+var _ = require('underscore');
+
 
 exports.headers = headers = {
   "access-control-allow-origin": "*",
@@ -13,13 +15,18 @@ exports.headers = headers = {
   'Content-Type': "text/html"
 };
 
-exports.serveAssets = function(res, asset, code, callback) {
+exports.serveAssets = function(res, asset, code, extendHeaders, callback) {
   // Write some code here that helps serve up your static files!
   // (Static files are things like html (yours or archived from others...),
   // css, or anything that doesn't change often.)
 
   // asset would be the html / whatever file
   // res.end probably goes here
+  var extendHeaders = extendHeaders || {};
+  console.log('ex:', extendHeaders);
+  _.defaults(extendHeaders, headers);
+  console.log('h: ', extendHeaders)
+
   console.log('asset: '+asset);
   var serve = function(asset) {
     console.log('serving');
@@ -28,7 +35,7 @@ exports.serveAssets = function(res, asset, code, callback) {
         if (err) {
           console.log(err);
         } else {
-          res.writeHead(code, headers);
+          res.writeHead(code, extendHeaders);
           res.end(data);
           callback();
         }
@@ -36,7 +43,8 @@ exports.serveAssets = function(res, asset, code, callback) {
     }
     else {
       // this is now handling both 404 and 302
-      res.writeHead(code, headers);
+      res.writeHead(code, extendHeaders);
+
       res.end(callback());
     }
   };
