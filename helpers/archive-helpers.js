@@ -53,8 +53,21 @@ exports.addUrlToList = function() {
   //should add the specified url to sites.txt and takes a callback (run with no params?)
 };
 
-exports.isUrlArchived = function() {
+exports.isUrlArchived = function(url, cb) {
   //should run its callback with the specified url if has already been archived or undefined
+  // look for the existence of a file with the specified name (fs.readFile   if we get an error
+    // then the file didn't exist)
+  var filePath = exports.paths.archivedSites + '/' + url;
+  fs.readFile(filePath, function(err, data) {
+    if (err) {
+      console.log('url not archived'+filePath);
+      cb(false);
+    }
+    else {
+      console.log('retrieving from archive');
+      cb(true);
+    }
+  })
 };
 
 exports.downloadUrls = function() {

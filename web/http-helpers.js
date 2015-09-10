@@ -20,9 +20,10 @@ exports.serveAssets = function(res, asset, callback) {
 
   // asset would be the html / whatever file
   // res.end probably goes here
-  var serve = function(fileExists) {
+  console.log('asset: '+asset);
+  var serve = function(asset) {
     console.log('serving');
-    if (fileExists) {
+    if (asset) {
       fs.readFile(asset, function(err, data) {
         if (err) {
           console.log(err);
@@ -34,18 +35,21 @@ exports.serveAssets = function(res, asset, callback) {
       });
     }
     else {
+      // handle loading here
       res.writeHead(404, headers);
       res.end("File not found");
     }
   };
 
+  serve(asset);
+
   // ========= LOGIC for checking how to serve files =======
-  if (asset === __dirname+'/public/index.html') {
-    serve(true);
-  } // somewhere in here we need to do else ifs for css/other files
-  else {
-    var urlExists = archive.isUrlInList( asset, serve );
-  }
+  // if (asset === __dirname+'/public/index.html') {
+  //   serve(true);
+  // } // somewhere in here we need to do else ifs for css/other files
+  // else {
+  //   var urlExists = archive.isUrlArchived(asset, serve );
+  // }
 
   // console.log('urlexists: '+urlExists);
 };
