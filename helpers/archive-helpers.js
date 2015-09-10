@@ -1,6 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
+var http = require('http');
 
 /*
  * You will need to reuse the same paths many times over in the course of this sprint.
@@ -49,8 +50,11 @@ exports.isUrlInList = function(url, cb) {
   });
 };
 
-exports.addUrlToList = function() {
+exports.addUrlToList = function(url, cb) {
   //should add the specified url to sites.txt and takes a callback (run with no params?)
+  fs.appendFile(exports.paths.list, url+"\n", function() {
+    cb();
+  });
 };
 
 exports.isUrlArchived = function(url, cb) {
@@ -70,6 +74,31 @@ exports.isUrlArchived = function(url, cb) {
   })
 };
 
-exports.downloadUrls = function() {
+exports.downloadUrls = function(array) {
   //should save the websites in the current list and add the urls to archive.paths.archivedSites which should be an array
+  for (var i = 0; i < array.length; i++) {
+    // console.log(array[i]);
+    http.request({host:array[i]}, archiveSite.bind(this, array[i])).end();
+  }
+
+  function archiveSite(hostName, response) {
+    console.log('hostName is '+hostName);
+    var data = "";
+    response.on('data', function(chunk) {
+      data+=chunk;
+    });
+    response.on('end', function(err) {
+      if (err) { console.log(err); }
+      else {
+        fs.writeFile(exports.paths.archivedSites + '/' + hostName, function(err){
+          if(err){
+            console.log('failing bodaciously');
+          }
+          else{
+            console.log('writing to disk'); 
+          }
+        });
+      }
+    });
+  }
 };

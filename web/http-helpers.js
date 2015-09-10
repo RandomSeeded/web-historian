@@ -13,7 +13,7 @@ exports.headers = headers = {
   'Content-Type': "text/html"
 };
 
-exports.serveAssets = function(res, asset, callback) {
+exports.serveAssets = function(res, asset, code, callback) {
   // Write some code here that helps serve up your static files!
   // (Static files are things like html (yours or archived from others...),
   // css, or anything that doesn't change often.)
@@ -28,16 +28,16 @@ exports.serveAssets = function(res, asset, callback) {
         if (err) {
           console.log(err);
         } else {
-          res.writeHead(200, headers);
+          res.writeHead(code, headers);
           res.end(data);
           callback();
         }
       });
     }
     else {
-      // handle loading here
-      res.writeHead(404, headers);
-      res.end("File not found");
+      // this is now handling both 404 and 302
+      res.writeHead(code, headers);
+      res.end(callback());
     }
   };
 
